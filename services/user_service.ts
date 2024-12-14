@@ -29,3 +29,11 @@ export const update_user = async (id: number, user: User) => {
   const updated_user: User = await response.json();
   return updated_user;
 }
+
+export const delete_user = async (id: number) => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+  });
+  const deleted_user: User = await response.json();
+  return deleted_user;
+}
