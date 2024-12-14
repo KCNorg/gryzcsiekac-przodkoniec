@@ -5,24 +5,41 @@ export default function Page() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
-        <Text style={styles.title}>Wybierz role:</Text>
+        <Text style={styles.title}>Ktoś dla Ciebie</Text>
+        {/* <Text style={styles.subtitle}>Wybierz kategorię</Text> */}
         <View style={styles.categories}>
-          <Link href="/elderMan" asChild>
-            <Pressable style={styles.category}>
+          <Link href="/groceries" asChild>
+            <Pressable>
               <Image
                 source={require("../assets/images/groceries.png")}
                 style={styles.icon}
               />
-              <Text style={styles.label}>Potrzebujący</Text>
             </Pressable>
           </Link>
-          <Link href="/volunteer" asChild>
-            <Pressable style={styles.category}>
+          <Link href="/groceries" asChild>
+            <Pressable>
               <Image
                 source={require("../assets/images/dog.png")}
                 style={styles.icon}
               />
-              <Text style={styles.label}>Wolontariusz</Text>
+            </Pressable>
+          </Link>
+        </View>
+        <View style={styles.categories}>
+          <Link href="/groceries" asChild>
+            <Pressable>
+              <Image
+                source={require("../assets/images/talk.png")}
+                style={styles.icon}
+              />
+            </Pressable>
+          </Link>
+          <Link href="/groceries" asChild>
+            <Pressable>
+              <Image
+                source={require("../assets/images/other.png")}
+                style={styles.icon}
+              />
             </Pressable>
           </Link>
         </View>
@@ -37,7 +54,6 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   main: {
     flex: 1,
@@ -45,28 +61,22 @@ const styles = StyleSheet.create({
     paddingBottom: 96,
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 24,
+  },
+  subtitle: {
+    fontSize: 24,
+    color: "#38434D",
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 128,
+    height: 128,
   },
   categories: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 24,
-    width: "100%",
-  },
-  category: {
-    alignItems: "center",
-    width: "40%",
-  },
-  label: {
-    marginTop: 8,
-    fontSize: 16,
-    textAlign: "center",
+    marginTop: 48,
+    gap: 32,
   },
 });
