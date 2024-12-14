@@ -1,6 +1,9 @@
 import GroceriesItem from "@/components/groceries/GroceriesItem";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { get_order, get_orders, update_order } from "@/services/order_service";
+import { Order } from "@/types/order";
 import { Ionicons } from "@expo/vector-icons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Text,
@@ -19,21 +22,50 @@ export type Product = {
 };
 
 export default function Groceries() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["get_grocery_list", 3],
+    queryFn: async () => await get_order(3),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (order: Order) => update_order(3, order),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get_grocery_list", 3] });
+    },
+  });
+
   const [text, setText] = useState("");
 
   const { recognizing, handleStart, handleStop } = useSpeechRecognition({
     setText,
   });
 
+  if (!data?.description?.data || isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  const products = data.description.data;
+
+  const setProducts = (products: Product[]) => {};
+
   async function addProduct() {
     const newProduct = { id: Date.now(), text, completed: false };
-    setProducts([...products, newProduct]);
+    mutation.mutate({
+      description: {
+        data: [...products, newProduct],
+      },
+    });
     setText("");
   }
 
   function deleteTask(id: number) {
-    setProducts(products.filter((product) => product.id !== id));
+    mutation.mutate({
+      description: {
+        data: products.filter((product) => product.id !== id),
+      },
+    });
   }
 
   return (
