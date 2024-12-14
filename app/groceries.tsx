@@ -1,4 +1,6 @@
 import GroceriesItem from "@/components/groceries/GroceriesItem";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
   Text,
@@ -7,59 +9,78 @@ import {
   TextInput,
   Button,
   ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 
-interface Task {
+export type Product = {
   id: number;
   text: string;
-  completed: boolean;
-}
+};
 
 export default function Groceries() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, text: "Doctor Appointment", completed: true },
-    { id: 2, text: "Meeting at School", completed: false },
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [text, setText] = useState("");
 
-  function addTask() {
-    const newTask = { id: Date.now(), text, completed: false };
-    setTasks([...tasks, newTask]);
+  const { recognizing, handleStart, handleStop } = useSpeechRecognition({
+    setText,
+  });
+
+  async function addProduct() {
+    const newProduct = { id: Date.now(), text, completed: false };
+    setProducts([...products, newProduct]);
     setText("");
   }
 
   function deleteTask(id: number) {
-    setTasks(tasks.filter((task) => task.id !== id));
-  }
-
-  function toggleCompleted(id: number) {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+    setProducts(products.filter((product) => product.id !== id));
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Dodaj do listy zakupów</Text>
+      <View style={styles.addProduct}>
+        <View style={styles.row}>
+          <TextInput
+            style={styles.textInput}
+            value={text}
+            onChangeText={setText}
+            placeholder="Wpisz co dodać do listy..."
+          />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.mic}
+              onPress={recognizing ? handleStop : handleStart}
+            >
+              {recognizing ? (
+                <Ionicons name="mic-off-outline" size={32} />
+              ) : (
+                <Ionicons name="mic-outline" size={32} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.button}>
+          <Button
+            title="Dodaj do listy"
+            onPress={addProduct}
+            disabled={text === "" || recognizing}
+          />
+        </View>
+      </View>
+      <Text style={styles.title}>Lista zakupów</Text>
       <ScrollView>
         <View style={styles.productsList}>
-          {tasks.map((task) => (
+          {products.map((product) => (
             <GroceriesItem
-              key={task.id}
-              task={task}
+              key={product.id}
+              product={product}
               deleteTask={deleteTask}
-              toggleCompleted={toggleCompleted}
             />
           ))}
         </View>
       </ScrollView>
-      <View style={styles.addProduct}>
-        <Text style={styles.title}>Dodaj do listy zakupów</Text>
-        <TextInput value={text} onChangeText={setText} placeholder="New Task" />
-        <Button title="Add" onPress={addTask} />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -67,32 +88,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 20,
+    padding: 16,
+    paddingBottom: 12,
+    fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
+    backgroundColor: "#fff",
   },
   productsList: {
-    padding: 16,
+    paddingHorizontal: 12,
     flex: 1,
-    rowGap: 4,
+    gap: 8,
   },
   addProduct: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 8,
+  },
+  textInput: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
     padding: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
+    fontSize: 16,
+    borderRadius: 16,
+  },
+  mic: {
+    padding: 8,
+    borderRadius: 100,
+  },
+  row: {
+    flexDirection: "row",
+  },
+  button: {
+    marginTop: 8,
   },
 });
