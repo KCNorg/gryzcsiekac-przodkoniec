@@ -48,8 +48,6 @@ export default function Groceries() {
 
   const products = data.description.data;
 
-  const setProducts = (products: Product[]) => {};
-
   async function addProduct() {
     const newProduct = { id: Date.now(), text, completed: false };
     mutation.mutate({

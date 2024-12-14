@@ -9,7 +9,6 @@ export const get_orders = async () => {
 
 export const get_order = async (id: number) => {
   const order: Order = await apiCall(`${API_URL}/orders/${id}`);
-  console.log(order);
   return order;
 };
 
