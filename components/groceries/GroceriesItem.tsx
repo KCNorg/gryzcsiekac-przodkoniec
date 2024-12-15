@@ -1,10 +1,10 @@
-import { Product } from "@/app/groceries";
+import { Product } from "@/types/order";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type GroceriesItemProps = {
   product: Product;
-  deleteTask: (id: number) => void;
+  deleteTask?: (id: number) => void;
 };
 
 export default function GroceriesItem({
@@ -14,9 +14,11 @@ export default function GroceriesItem({
   return (
     <View style={styles.item}>
       <Text style={styles.itemText}>{product.text}</Text>
-      <TouchableOpacity onPress={() => deleteTask(product.id)}>
-        <Text style={styles.deleteButton}>Delete</Text>
-      </TouchableOpacity>
+      {deleteTask && (
+        <TouchableOpacity onPress={() => deleteTask(product.id)}>
+          <Text style={styles.deleteButton}>Usuń</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    maxWidth: "70%",
+    maxWidth: "80%",
   },
   deleteButton: {
     fontSize: 18,

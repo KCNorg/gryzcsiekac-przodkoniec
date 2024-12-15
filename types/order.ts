@@ -9,9 +9,9 @@ export type Order = {
   description?: {
     data: Product[];
   } | null;
-  created_at?: Date | null;
-  valid_since?: Date | null;
-  valid_until?: Date | null;
+  created_at?: string | null;
+  valid_since?: string | null;
+  valid_until?: string | null;
   status?: string | null;
   senior_id?: number | null;
   volunteer_id?: number | null;
