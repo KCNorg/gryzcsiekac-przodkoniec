@@ -36,6 +36,10 @@ export default function RootLayout() {
             name="volunteer"
             options={{ title: "Mapa", headerShown: false }}
           />
+          <Stack.Screen
+            name="volunteer/[id]"
+            options={{ title: "" }}
+          />
 
           <Stack.Screen name="groceries" options={{ title: "Zakupy" }} />
           <Stack.Screen name="groceries/index" options={{ title: "Zakupy" }} />

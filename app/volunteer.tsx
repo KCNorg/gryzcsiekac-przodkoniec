@@ -239,7 +239,7 @@ export default function VolunteerView() {
                   </Text>
                 </View>
                 {selectedPerson?.id === data.id && (
-                  <Link href={`/groceries`} asChild>
+                  <Link href={`/volunteer/${data.id}`} asChild>
                     <TouchableOpacity>
                       <Ionicons
                         name="eye-outline"
