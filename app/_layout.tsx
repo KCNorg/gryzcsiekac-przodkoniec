@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import * as Network from "expo-network";
+import { UserProvider } from "@/services/user_context";
 
 // @ts-ignore
 onlineManager.setEventListener((setOnline) => {
@@ -19,16 +20,17 @@ export default function RootLayout() {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#fff",
-          },
-          contentStyle: { backgroundColor: "#fff" },
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: "Start" }} />
+    <UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#fff",
+            },
+            contentStyle: { backgroundColor: "#fff" },
+          }}
+        >
+        <Stack.Screen name="index" options={{ title: "Logowanie" }} />
         <Stack.Screen name="elder" options={{ title: "" }} />
 
         <Stack.Screen name="groceries" options={{ title: "Zakupy" }} />
@@ -43,7 +45,7 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="groceries/create/[id]"
-          options={{ title: "Zakupy" }}
+            options={{ title: "Zakupy" }}
         />
 
         <Stack.Screen
@@ -80,8 +82,9 @@ export default function RootLayout() {
         <Stack.Screen
           name="other/create/[id]"
           options={{ title: "Coś innego" }}
-        />
-      </Stack>
-    </QueryClientProvider>
+          />
+        </Stack>
+      </QueryClientProvider>
+    </UserProvider>
   );
 }
