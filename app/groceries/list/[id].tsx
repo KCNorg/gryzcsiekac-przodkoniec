@@ -8,7 +8,7 @@ import { Text, View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import StatusLabel from "@/components/StatusLabel";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function ShoppingList() {
+export default function GroceriesListItem() {
   const { id } = useLocalSearchParams<{
     id: string;
   }>();

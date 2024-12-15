@@ -1,8 +1,8 @@
-import OrdersList from "@/components/OrdersList";
+import OrderCategoryView from "@/components/OrderCategoryView";
 import { create_order } from "@/services/order_service";
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { StyleSheet, SafeAreaView, Button } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 
 export default function Groceries() {
   const mutation = useMutation({
@@ -15,15 +15,17 @@ export default function Groceries() {
         description: { data: [] },
       }),
     onSuccess: (result) => {
-      if (result.id)
-        router.replace(`/groceries/shopping-list/create/${result.id}`);
+      if (result.id) router.replace(`/groceries/create/${result.id}`);
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      <OrdersList category="groceries" />
-      <Button title="Dodaj zakupy" onPress={() => mutation.mutate()} />
+      <OrderCategoryView
+        category="groceries"
+        categoryIcon={require("../../assets/images/groceries.png")}
+        onCreate={mutation.mutate}
+      />
     </SafeAreaView>
   );
 }
@@ -32,6 +34,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#fff",
   },
 });

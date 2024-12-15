@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, StyleSheet } from "react-native";
 
-const statusMap = {
+export const STATUS_MAP = {
   pending: {
     text: "Oczekujące na wolontariusza",
     icon: "timer-outline",
-    color: "#2563eb",
+    color: "#9333ea",
   },
   accepted: {
     text: "Wolontariusz zaakceptował",
@@ -15,7 +15,7 @@ const statusMap = {
   completed: {
     text: "Zrealizowano",
     icon: "checkmark-done-outline",
-    color: "#9333ea",
+    color: "#2563eb",
   },
   cancelled: {
     text: "Anulowano",
@@ -24,13 +24,21 @@ const statusMap = {
   },
 };
 
-export default function StatusLabel({ status }: { status: string }) {
+export default function StatusLabel({
+  status,
+  fontSize,
+}: {
+  status: string;
+  fontSize?: number;
+}) {
   // @ts-ignore
-  const { text, icon, color } = statusMap[status];
+  const { text, icon, color } = STATUS_MAP[status];
 
   return (
     <View style={styles.row}>
-      <Text style={{ ...styles.text, color: color }}>{text}</Text>
+      <Text style={{ ...styles.text, color: color, fontSize: fontSize ?? 18 }}>
+        {text}
+      </Text>
       <Ionicons name={icon} size={24} color={color} />
     </View>
   );
@@ -38,7 +46,6 @@ export default function StatusLabel({ status }: { status: string }) {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 18,
     fontWeight: "semibold",
   },
   row: {

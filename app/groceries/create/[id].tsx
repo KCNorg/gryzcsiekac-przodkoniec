@@ -18,7 +18,7 @@ import {
   SafeAreaView,
 } from "react-native";
 
-export default function ShoppingListCreate() {
+export default function GroceriesCreate() {
   const { id } = useLocalSearchParams<{
     id: string;
   }>();

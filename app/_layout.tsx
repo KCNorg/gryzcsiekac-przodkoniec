@@ -29,12 +29,57 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: "Start" }} />
-        <Stack.Screen name="elderMan" options={{ title: "" }} />
+        <Stack.Screen name="elder" options={{ title: "" }} />
+
         <Stack.Screen name="groceries" options={{ title: "Zakupy" }} />
         <Stack.Screen name="groceries/index" options={{ title: "Zakupy" }} />
         <Stack.Screen
-          name="groceries/shopping-list/[id]"
+          name="groceries/list/index"
           options={{ title: "Zakupy" }}
+        />
+        <Stack.Screen
+          name="groceries/list/[id]"
+          options={{ title: "Zakupy" }}
+        />
+        <Stack.Screen
+          name="groceries/create/[id]"
+          options={{ title: "Zakupy" }}
+        />
+
+        <Stack.Screen
+          name="conversation/index"
+          options={{ title: "Rozmowa" }}
+        />
+        <Stack.Screen
+          name="conversation/list/index"
+          options={{ title: "Rozmowa" }}
+        />
+        <Stack.Screen
+          name="conversation/create/[id]"
+          options={{ title: "Rozmowa" }}
+        />
+
+        <Stack.Screen
+          name="pet_walking/index"
+          options={{ title: "Zwierzęta" }}
+        />
+        <Stack.Screen
+          name="pet_walking/list/index"
+          options={{ title: "Zwierzęta" }}
+        />
+        <Stack.Screen
+          name="pet_walking/create/[id]"
+          options={{ title: "Zwierzęta" }}
+        />
+
+        <Stack.Screen name="other/index" options={{ title: "Coś innego" }} />
+        <Stack.Screen
+          name="other/list/index"
+          options={{ title: "Coś innego" }}
+        />
+        <Stack.Screen
+          name="other/create/[id]"
+          options={{ title: "Coś innego" }}
         />
       </Stack>
     </QueryClientProvider>

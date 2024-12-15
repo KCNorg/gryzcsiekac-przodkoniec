@@ -1,12 +1,12 @@
 import OrderCategoryView from "@/components/OrderCategoryView";
 import { StyleSheet, SafeAreaView } from "react-native";
 
-export default function Other() {
+export default function PetWalking() {
   return (
     <SafeAreaView style={styles.container}>
       <OrderCategoryView
-        category="other"
-        categoryIcon={require("../../assets/images/other.png")}
+        category="pet_walking"
+        categoryIcon={require("../../assets/images/dog.png")}
         onCreate={() => {}}
       />
     </SafeAreaView>

@@ -1,14 +1,7 @@
 import { Link } from "expo-router";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-export default function ElderMan() {
+export default function ElderView() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
@@ -23,7 +16,7 @@ export default function ElderMan() {
               <Text style={styles.text}>Zakupy</Text>
             </TouchableOpacity>
           </Link>
-          <Link href="/groceries" asChild>
+          <Link href="/conversation" asChild>
             <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/talk.png")}
@@ -34,7 +27,7 @@ export default function ElderMan() {
           </Link>
         </View>
         <View style={styles.categories}>
-          <Link href="/groceries" asChild>
+          <Link href="/pet_walking" asChild>
             <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/dog.png")}
@@ -43,7 +36,7 @@ export default function ElderMan() {
               <Text style={styles.text}>Zwierzęta</Text>
             </TouchableOpacity>
           </Link>
-          <Link href="/groceries" asChild>
+          <Link href="/other" asChild>
             <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/other.png")}
@@ -75,10 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  subtitle: {
-    fontSize: 24,
-    color: "#38434D",
-  },
   icon: {
     width: 128,
     height: 128,
@@ -95,6 +84,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginTop: 8,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
 });

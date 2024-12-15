@@ -1,29 +1,29 @@
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 export default function Page() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
-        <Text style={styles.title}>Wybierz role:</Text>
+        <Text style={styles.title}>Wybierz rolę</Text>
         <View style={styles.categories}>
-          <Link href="/elderMan" asChild>
-            <Pressable style={styles.category}>
+          <Link href="/elder" asChild>
+            <TouchableOpacity style={styles.button}>
               <Image
-                source={require("../assets/images/groceries.png")}
+                source={require("../assets/images/elder.png")}
                 style={styles.icon}
               />
-              <Text style={styles.label}>Potrzebujący</Text>
-            </Pressable>
+              <Text style={styles.text}>Potrzebujący</Text>
+            </TouchableOpacity>
           </Link>
           <Link href="/volunteer" asChild>
-            <Pressable style={styles.category}>
+            <TouchableOpacity style={styles.button}>
               <Image
-                source={require("../assets/images/dog.png")}
+                source={require("../assets/images/volunteer.png")}
                 style={styles.icon}
               />
-              <Text style={styles.label}>Wolontariusz</Text>
-            </Pressable>
+              <Text style={styles.text}>Wolontariusz</Text>
+            </TouchableOpacity>
           </Link>
         </View>
       </View>
@@ -37,36 +37,33 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   main: {
     flex: 1,
     justifyContent: "center",
-    paddingBottom: 96,
+    paddingBottom: 128,
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 24,
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 128,
+    height: 128,
   },
   categories: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 24,
-    width: "100%",
+    marginTop: 48,
+    gap: 48,
   },
-  category: {
+  button: {
     alignItems: "center",
-    width: "40%",
   },
-  label: {
+  text: {
+    fontSize: 18,
     marginTop: 8,
-    fontSize: 16,
-    textAlign: "center",
+    fontWeight: "600",
   },
 });
