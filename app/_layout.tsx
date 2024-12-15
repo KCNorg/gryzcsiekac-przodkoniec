@@ -16,6 +16,9 @@ onlineManager.setEventListener((setOnline) => {
   });
 });
 
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs();
+
 export default function RootLayout() {
   const queryClient = new QueryClient();
 
@@ -31,7 +34,10 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ title: "Logowanie" }} />
-          <Stack.Screen name="elder" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="elder"
+            options={{ title: "", headerShown: false }}
+          />
           <Stack.Screen
             name="volunteer"
             options={{ title: "Mapa", headerShown: false }}

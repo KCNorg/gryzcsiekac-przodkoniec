@@ -10,8 +10,6 @@ export default function Groceries() {
       create_order({
         senior_id: 8,
         category: "groceries",
-        valid_since: "1",
-        valid_until: "1",
         description: { data: [] },
       }),
     onSuccess: (result) => {
