@@ -125,8 +125,8 @@ export default function VolunteerView() {
           )
         : 0;
       return {
-        ...order,
         ...user,
+        ...order,
         distance,
       };
     })
@@ -167,30 +167,38 @@ export default function VolunteerView() {
         ref={mapRef}
       >
         {sortedData &&
-          sortedData.map((data, index) => (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: data.latitude ?? 0,
-                longitude: data.longitude ?? 0,
-              }}
-              onPress={() => {
-                setSelectedPerson((data as User) ?? null);
-                centerMapOnPerson(data as User);
-              }}
-            >
-              <View style={styles.customMarker}>
-                <Image
-                  source={{ uri: data.image_url ?? "" }}
-                  style={[
-                    styles.markerImage,
-                    selectedPerson?.id === data?.id &&
-                      styles.selectedMarkerImage,
-                  ]}
-                />
-              </View>
-            </Marker>
-          ))}
+          sortedData
+            .filter(
+              (data) =>
+                !(
+                  data.elder_id === selectedPerson?.elder_id &&
+                  data.id !== selectedPerson?.id
+                )
+            )
+            .map((data, index) => (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: data.latitude ?? 0,
+                  longitude: data.longitude ?? 0,
+                }}
+                onPress={() => {
+                  setSelectedPerson((data as User) ?? null);
+                  centerMapOnPerson(data as User);
+                }}
+              >
+                <View style={styles.customMarker}>
+                  <Image
+                    source={{ uri: data.image_url ?? "" }}
+                    style={[
+                      styles.markerImage,
+                      selectedPerson?.id === data?.id &&
+                        styles.selectedMarkerImage,
+                    ]}
+                  />
+                </View>
+              </Marker>
+            ))}
       </MapView>
       <ScrollView
         persistentScrollbar={true}
@@ -265,17 +273,12 @@ const styles = StyleSheet.create({
   customMarker: {
     alignItems: "center",
   },
-  confirmButton: {
-    padding: 8,
-    backgroundColor: "#007BFF",
-    borderRadius: 4,
-  },
   markerImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#007BFF",
+    borderColor: "#3b82f6",
   },
   yourLocalisation: {
     width: 60,
@@ -289,7 +292,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     borderWidth: 2,
-    borderColor: "yellow",
+    borderColor: "#10b981",
   },
   block: {
     flexDirection: "row",
