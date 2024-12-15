@@ -8,7 +8,7 @@ export const get_user = async (id: number) => {
 }
 
 export const get_users = async () => {
-  const users: User[] = await apiCall(`${API_URL}/users`);
+  const users: User[] = await apiCall(`${API_URL}/users?limit=1000`);
   return users;
 }
 
