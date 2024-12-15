@@ -1,83 +1,84 @@
-import GroceriesItem from "@/components/groceries/GroceriesItem";
-import { Loader } from "@/components/Loader";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
-import { get_order, get_orders, update_order } from "@/services/order_service";
+import { create_order } from "@/services/order_service";
 import { Order } from "@/types/order";
 import { Ionicons } from "@expo/vector-icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   Text,
   View,
   StyleSheet,
   TextInput,
   Button,
-  ScrollView,
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { router } from "expo-router";
 
-export default function GroceriesCreate() {
-  const { id } = useLocalSearchParams<{
-    id: string;
-  }>();
-
+export default function ConversationCreate() {
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["order", parseInt(id)],
-    queryFn: async () => await get_order(parseInt(id)),
-  });
-
   const mutation = useMutation({
-    mutationFn: (order: Order) => update_order(parseInt(id), order),
+    mutationFn: (order: Order) => create_order(order),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order", parseInt(id)] });
-      queryClient.invalidateQueries({ queryKey: ["orders", "groceries"] });
+      queryClient.invalidateQueries({ queryKey: ["orders", "conversation"] });
     },
   });
 
   const [text, setText] = useState("");
+  const [selectedType, setSelectedType] = useState();
+  const [date, setDate] = useState(new Date());
 
   const { recognizing, handleStart, handleStop } = useSpeechRecognition({
     setText,
   });
 
-  if (!data?.description?.data || isLoading) {
-    return <Loader />;
-  }
-
-  const products = data.description.data;
-
-  async function addProduct() {
-    const newProduct = { id: Date.now(), text, completed: false };
+  async function save() {
     mutation.mutate({
+      category: "conversation",
+      senior_id: 8,
+      valid_since: date.toISOString(),
       description: {
-        data: [...products, newProduct],
+        data: [
+          { id: 1, text: selectedType ?? "" },
+          { id: 2, text: text },
+        ],
       },
     });
-    setText("");
-  }
-
-  function deleteTask(id: number) {
-    mutation.mutate({
-      description: {
-        data: products.filter((product) => product.id !== id),
-      },
-    });
+    router.replace("/conversation");
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Dodaj do listy zakupów</Text>
+      <Text style={styles.title}>W jakiej formie?</Text>
+      <Picker
+        style={{ marginTop: -40, marginBottom: -40 }}
+        selectedValue={selectedType}
+        onValueChange={(itemValue, itemIndex) => setSelectedType(itemValue)}
+      >
+        <Picker.Item label="Telefonicznie" value="Telefonicznie" />
+        <Picker.Item label="Na żywo" value="Na żywo" />
+      </Picker>
+      <Text style={styles.title}>Kiedy?</Text>
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={date}
+        mode="datetime"
+        onChange={(event, date) => setDate(date)}
+      />
+      <Text style={{ ...styles.title, marginTop: 16 }}>
+        Dodatkowe informacje
+      </Text>
       <View style={styles.addProduct}>
         <View style={styles.row}>
           <TextInput
+            multiline
             style={styles.textInput}
             value={text}
             onChangeText={setText}
-            placeholder="Wpisz co dodać do listy..."
+            placeholder="Dodatkowy opis"
           />
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <TouchableOpacity
@@ -93,30 +94,9 @@ export default function GroceriesCreate() {
           </View>
         </View>
         <View style={styles.button}>
-          <Button
-            title="Dodaj do listy"
-            onPress={addProduct}
-            disabled={text === "" || recognizing}
-          />
+          <Button title="Utwórz zgłoszenie" onPress={save} />
         </View>
       </View>
-      <Text style={styles.title}>Lista zakupów</Text>
-      {products.length === 0 && (
-        <View style={styles.emptyList}>
-          <Ionicons name="cart-outline" size={300} color="#f5f5f5" />
-        </View>
-      )}
-      <ScrollView>
-        <View style={styles.productsList}>
-          {products.map((product) => (
-            <GroceriesItem
-              key={product.id}
-              product={product}
-              deleteTask={deleteTask}
-            />
-          ))}
-        </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -151,6 +131,7 @@ const styles = StyleSheet.create({
     padding: 16,
     fontSize: 16,
     borderRadius: 16,
+    height: 110,
   },
   mic: {
     padding: 8,
@@ -160,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   button: {
-    marginTop: 8,
+    marginTop: 24,
   },
   emptyList: {
     alignItems: "center",

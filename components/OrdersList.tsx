@@ -16,7 +16,7 @@ import { format, parseISO } from "date-fns";
 export default function OrdersList({ category }: { category: string }) {
   const { data, isLoading } = useQuery({
     queryKey: ["orders", category],
-    queryFn: async () => await get_orders({ category }),
+    queryFn: async () => await get_orders({ category, senior_id: 8 }),
   });
 
   if (!data || isLoading) {
@@ -36,20 +36,23 @@ export default function OrdersList({ category }: { category: string }) {
                 borderColor: STATUS_MAP[order.status].color,
               }}
             >
-              <View style={styles.label}>
-                <StatusLabel status={order.status!} fontSize={20} />
-              </View>
-              <Text style={styles.label}>
-                Utworzono:{" "}
-                <Text style={styles.text}>
-                  {format(parseISO(order.created_at ?? ""), "Pp")}
+              <View style={styles.dateRow}>
+                <Text style={styles.dateText}>
+                  {format(parseISO(order.created_at ?? ""), "P")}
                 </Text>
-              </Text>
+                <Text style={styles.dateText}>
+                  {format(parseISO(order.created_at ?? ""), "p")}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <StatusLabel status={order.status!} />
+              </View>
               {category === "groceries" && (
                 <Link href={`/groceries/list/${order.id}`} asChild>
                   <Button title="Zobacz listę zakupów →" />
                 </Link>
               )}
+              {category === "conversation" && <View></View>}
             </View>
           ))}
         </View>
@@ -89,8 +92,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
   },
+  dateText: {
+    fontSize: 14,
+    color: "#4b5563",
+  },
   text: {
     fontSize: 18,
     fontWeight: "normal",
+  },
+  row: {
+    paddingTop: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  dateRow: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
