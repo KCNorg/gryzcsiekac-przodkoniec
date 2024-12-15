@@ -1,46 +1,56 @@
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View, Image } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 
-export default function Page() {
+export default function ElderMan() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
         <Text style={styles.title}>Ktoś dla Ciebie</Text>
-        {/* <Text style={styles.subtitle}>Wybierz kategorię</Text> */}
         <View style={styles.categories}>
           <Link href="/groceries" asChild>
-            <Pressable>
+            <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/groceries.png")}
                 style={styles.icon}
               />
-            </Pressable>
+              <Text style={styles.text}>Zakupy</Text>
+            </TouchableOpacity>
           </Link>
           <Link href="/groceries" asChild>
-            <Pressable>
-              <Image
-                source={require("../assets/images/dog.png")}
-                style={styles.icon}
-              />
-            </Pressable>
-          </Link>
-        </View>
-        <View style={styles.categories}>
-          <Link href="/groceries" asChild>
-            <Pressable>
+            <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/talk.png")}
                 style={styles.icon}
               />
-            </Pressable>
+              <Text style={styles.text}>Rozmowa</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+        <View style={styles.categories}>
+          <Link href="/groceries" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Image
+                source={require("../assets/images/dog.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.text}>Zwierzęta</Text>
+            </TouchableOpacity>
           </Link>
           <Link href="/groceries" asChild>
-            <Pressable>
+            <TouchableOpacity style={styles.button}>
               <Image
                 source={require("../assets/images/other.png")}
                 style={styles.icon}
               />
-            </Pressable>
+              <Text style={styles.text}>Coś innego</Text>
+            </TouchableOpacity>
           </Link>
         </View>
       </View>
@@ -58,7 +68,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: "center",
-    paddingBottom: 96,
+    paddingBottom: 128,
   },
   title: {
     fontSize: 36,
@@ -77,6 +87,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 48,
-    gap: 32,
+    gap: 48,
+  },
+  button: {
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 18,
+    marginTop: 8,
+    fontWeight: "bold",
   },
 });

@@ -2,7 +2,13 @@ import { Order } from "@/types/order";
 import { API_URL } from "@/constants/Api";
 import { apiCall } from "./utils";
 
-export const get_orders = async () => {
+export const get_orders = async ({ category }: { category?: string }) => {
+  const categoryParam = category ? `?category=${category}` : "";
+  const orders: Order[] = await apiCall(`${API_URL}/orders${categoryParam}`);
+  return orders;
+};
+
+export const get_orders_with_category = async () => {
   const orders: Order[] = await apiCall(`${API_URL}/orders`);
   return orders;
 };

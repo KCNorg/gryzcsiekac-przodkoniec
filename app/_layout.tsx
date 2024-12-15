@@ -29,7 +29,13 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: "Start" }} />
+        <Stack.Screen name="elderMan" options={{ title: "" }} />
         <Stack.Screen name="groceries" options={{ title: "Zakupy" }} />
+        <Stack.Screen name="groceries/index" options={{ title: "Zakupy" }} />
+        <Stack.Screen
+          name="groceries/shopping-list/[id]"
+          options={{ title: "Zakupy" }}
+        />
       </Stack>
     </QueryClientProvider>
   );
