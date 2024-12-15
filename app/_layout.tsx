@@ -97,6 +97,10 @@ export default function RootLayout() {
             name="other/create/[id]"
             options={{ title: "Coś innego" }}
           />
+        <Stack.Screen
+            name="conversation/chat"
+            options={{ title: "Chat z GPT" }}
+          />
         </Stack>
       </QueryClientProvider>
     </UserProvider>

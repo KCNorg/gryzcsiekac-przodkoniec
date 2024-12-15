@@ -3,7 +3,7 @@ export const CATEGORY_MAP = {
     name: "Zakupy",
     icon: "🛒",
   },
-  pharmacy: {
+  conversation: {
     name: "Rozmowa",
     icon: "💬",
   },
