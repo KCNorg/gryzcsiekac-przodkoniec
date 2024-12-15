@@ -42,10 +42,7 @@ export default function RootLayout() {
             name="volunteer"
             options={{ title: "Mapa", headerShown: false }}
           />
-          <Stack.Screen
-            name="volunteer/[id]"
-            options={{ title: "" }}
-          />
+          <Stack.Screen name="volunteer/[id]" options={{ title: "" }} />
 
           <Stack.Screen name="groceries" options={{ title: "Zakupy" }} />
           <Stack.Screen name="groceries/index" options={{ title: "Zakupy" }} />
@@ -71,7 +68,7 @@ export default function RootLayout() {
             options={{ title: "Rozmowa" }}
           />
           <Stack.Screen
-            name="conversation/create/[id]"
+            name="conversation/create/index"
             options={{ title: "Rozmowa" }}
           />
 
@@ -97,7 +94,7 @@ export default function RootLayout() {
             name="other/create/[id]"
             options={{ title: "Coś innego" }}
           />
-        <Stack.Screen
+          <Stack.Screen
             name="conversation/chat"
             options={{ title: "Chat z GPT" }}
           />

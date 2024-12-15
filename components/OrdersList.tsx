@@ -16,7 +16,13 @@ import { format, parseISO } from "date-fns";
 export default function OrdersList({ category }: { category: string }) {
   const { data, isLoading } = useQuery({
     queryKey: ["orders", category],
-    queryFn: async () => await get_orders({ category, senior_id: 8 }),
+    queryFn: async () =>
+      await get_orders({
+        category,
+        senior_id: 8,
+        sort_by: "created_at",
+        sort_direction: "desc",
+      }),
   });
 
   if (!data || isLoading) {
@@ -52,7 +58,6 @@ export default function OrdersList({ category }: { category: string }) {
                   <Button title="Zobacz listę zakupów →" />
                 </Link>
               )}
-              {category === "conversation" && <View></View>}
             </View>
           ))}
         </View>
