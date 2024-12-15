@@ -1,9 +1,15 @@
 import { API_URL } from '@/constants/Api';
+import { apiCall } from './utils';
 
 export const get_user = async (id: number) => {
   const response = await fetch(`${API_URL}/users/${id}`);
   const user: User = await response.json();
   return user;
+}
+
+export const get_users = async () => {
+  const users: User[] = await apiCall(`${API_URL}/users`);
+  return users;
 }
 
 export const create_user = async (user: User) => {

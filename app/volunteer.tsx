@@ -11,80 +11,43 @@ SafeAreaView
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {  get_orders } from "@/services/order_service";
+import {get_users} from "@/services/user_service";
+import { Order } from "@/types/order";
 
-type Elder = {
-name: string;
-distance: string;
-requests: string;
-date: string;
-image: string;
-latitude: number;
-longitude: number;
+type OrderWithLocation = Order & {
+  latitude: number;
+  longitude: number;
 };
 
-const elderData: Elder[] = [
-{
-  name: "Jan Kowalski",
-  distance: "0 km",
-  requests: "Zakupy spożywcze",
-  date: "2023-10-01",
-  image: "https://images.unsplash.com/photo-1534954553104-88cb75be7648?q=80&w=2980&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  latitude: 50.0647,
-  longitude: 19.945,
-},
-{
-  name: "Anna Nowak",
-  distance: "0 km",
-  requests: "Pomoc w sprzątaniu",
-  date: "2023-10-02",
-  image: "https://images.unsplash.com/photo-1534954553104-88cb75be7648?q=80&w=2980&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  latitude: 50.0747,
-  longitude: 19.955,
-},
-{
-  name: "Piotr Wiśniewski",
-  distance: "0 km",
-  requests: "Wizyta towarzyska",
-  date: "2023-10-03",
-  image: "https://images.unsplash.com/photo-1534954553104-88cb75be7648?q=80&w=2980&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  latitude: 50.0747,
-  longitude: 19.935,
-},
-{
-  name: "Piotr TEst",
-  distance: "0 km",
-  requests: "Wizyta towarzyska",
-  date: "2023-10-03",
-  image: "https://images.unsplash.com/photo-1534954553104-88cb75be7648?q=80&w=2980&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  latitude: 50.0647,
-  longitude: 19.935,
-},
-{
-  name: "Piotr Marek",
-  distance: "0 km",
-  requests: "Wizyta towarzyska",
-  date: "2023-10-03",
-  image: "https://images.unsplash.com/photo-1534954553104-88cb75be7648?q=80&w=2980&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  latitude: 50.0547,
-  longitude: 19.935,
-},
-];
 
 export default function Page() {
+  const queryClient = useQueryClient();
+
+  const { data: ordersData, isLoading: isOrdersLoading } = useQuery({
+    queryKey: ["get_orders"],
+    queryFn: async () => await get_orders(),
+  });
+  const { data: usersData, isError: isUsersError } = useQuery({
+    queryKey: ["get_users"],
+    queryFn: async () => await get_users(),
+  });
+
 const [sortBy, setSortBy] = useState<"date" | "distance">("date");
 const [modalVisible, setModalVisible] = useState(false);
-const [selectedPerson, setSelectedPerson] = useState<Elder | null>(null);
+const [selectedPerson, setSelectedPerson] = useState<User | null>(null);
 const [location, setLocation] = useState<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number } | null>(null);
   const [initialRegion, setInitialRegion] = useState<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number } | null>(null);
 useEffect(() => {
   (async () => {
     // Request foreground permissions
     let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log(status)
     if (status !== 'granted') {
       alert('Permission to access location was denied');
       return;
     }
-    console.log("XD")
     // Get current location
     let currentLocation = await Location.getCurrentPositionAsync({});
     const region = {
@@ -100,17 +63,16 @@ useEffect(() => {
 
 const mapRef = React.useRef<MapView | null>(null);
 
-const centerMapOnPerson = (elder: Elder) => {
+const centerMapOnPerson = (person: User) => {
   if (mapRef.current) {
-    console.log("Centering map on:", elder);
     mapRef.current.animateToRegion({
-      latitude: elder.latitude,
-      longitude: elder.longitude,
+      latitude: person.latitude ?? 0,
+      longitude: person.longitude ?? 0,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
   }
-  setSelectedPerson(elder);
+  setSelectedPerson(person ?? null);
 };
 
 const calculateDistance = (
@@ -119,7 +81,6 @@ const calculateDistance = (
   lat2: number,
   lon2: number
 ): number => {
-  console.log("Calculating distance");
   console.log(lat1, lon1, lat2, lon2);
   const toRad = (value: number) => (value * Math.PI) / 180;
   const R = 6371; // Radius of Earth in km
@@ -136,33 +97,32 @@ const calculateDistance = (
 };
 
 const handleMapPress = () => {
-  console.log("Map clicked");
   if (initialRegion) {
     setLocation(initialRegion); // Reset map to initial region
   }
 };
 
-const sortedData = elderData
-  .map((elder) => ({
-    ...elder,
-    distance: location
-      ? calculateDistance(
-          location.latitude,
-          location.longitude,
-          elder.latitude,
-          elder.longitude
-        ).toFixed(2) + " km"
-      : "0 km",
-  }))
-  .sort((a, b) => {
-    if (sortBy === "date") {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    }
-    if (sortBy === "distance") {
-      return parseFloat(a.distance) - parseFloat(b.distance);
-    }
-    return 0;
-  });
+const sortedData = ordersData
+    ?.map((order) => {
+      const user = usersData?.find((user) => user.id === order.senior_id);
+      const distance = location ? 
+      calculateDistance(location.latitude, location.longitude, user?.latitude ?? 0, user?.longitude ?? 0): 0;
+      return {
+        ...order,
+        ...user,
+        distance,
+      };
+    })
+    .sort((a, b) => {
+      if (sortBy === "date") {
+        return new Date(a.valid_since ?? 0).getTime() - new Date(b.valid_since ?? 0).getTime();
+      }
+      if (sortBy === "distance") {
+        return a.distance - b.distance;
+      }
+      return 0;
+    });
+
 
 return (
   <SafeAreaView  style={styles.container}>
@@ -185,72 +145,54 @@ return (
         showsUserLocation={true}
         ref = {mapRef}
       >
-        {sortedData.map((elder, index) => (
+        {sortedData && sortedData.map((data, index) =>
+         
+          (
           <Marker
             key={index}
             coordinate={{
-              latitude: elder.latitude,
-              longitude: elder.longitude,
+              latitude: data.latitude ?? 0,
+              longitude: data.longitude ?? 0,
             }}
             onPress={() => {
-              setSelectedPerson(elder)
-              centerMapOnPerson(elder)
+              setSelectedPerson(data as User ?? null)
+              centerMapOnPerson(data as User)
             }}
           >
             <View style={styles.customMarker}>
               <Image
-              source={{ uri: elder.image }}
+              source={{ uri: data.image_url ?? "" }}
               style={[
                 styles.markerImage,
-                selectedPerson?.name === elder.name && styles.selectedMarkerImage,
+                selectedPerson?.id  === data?.id && styles.selectedMarkerImage,
               ]}
               />
             </View>
           </Marker>
         ))}
-        {/* {location && (
-          <Marker
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-            title="Twoja lokalizacja"
-            pinColor="blue"
-          >
-            <View style={styles.customMarker}>
-              <Image
-              source={{ uri: "https://plus.unsplash.com/premium_photo-1664391651999-3e9a1cb09a9d?q=80&w=2048&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }}
-              style={[
-                styles.yourLocalisation
-              ]}
-              />
-            </View>
-          </Marker>
-        )} */}
       </MapView>
-
-      {/* Lista */}
       <ScrollView persistentScrollbar={true}
   style={styles.list}
   keyboardShouldPersistTaps="handled"
   alwaysBounceVertical={false}>
-          {sortedData.map((elder, index) => (
+          {sortedData && sortedData.map((data, index) => (
          <TouchableOpacity
          key={index}
          style={[
            styles.block,
-           selectedPerson?.name === elder.name && styles.selectedBlock,
+           selectedPerson?.id === data?.id && styles.selectedBlock,
          ]}
-         onPress={() => centerMapOnPerson(elder)}
+         onPress={() => centerMapOnPerson(data as User)}
        >
-            <Image source={{ uri: elder.image }} style={styles.image} />
+            <Image source={{ uri: data.image_url ?? "" }} style={styles.image} />
             <View style={styles.textContainer}>
-              <Text style={styles.name}>{elder.name}</Text>
-              <Text style={styles.distance}>Odległość: {elder.distance}</Text>
-              <Text style={styles.requests}>Prośba: {elder.requests}</Text>
-              <Text style={styles.date}>Data: {elder.date}</Text>
+              <Text style={styles.name}>{(data.first_name ?? "") +" " +(data.last_name ?? "")}</Text>
+              <Text style={styles.distance}>Odległość: {data.distance.toFixed(2) + " km" }</Text>
+              <Text style={styles.requests}>Prośba: {data.category}</Text>
+              <Text style={styles.date}> od: {data.valid_since ? new Date(data.valid_since).toLocaleString() : ""}</Text>
+              <Text style={styles.date}> do: {data.valid_until ? new Date(data.valid_until).toLocaleString() : ""}</Text>
             </View>
-            {selectedPerson?.name === elder.name && (
+            {selectedPerson?.id === data.id && (
               <TouchableOpacity style={styles.confirmButton}>
                 <Text style={styles.confirmButtonText}>Zatwierdź</Text>
               </TouchableOpacity>
@@ -272,7 +214,7 @@ map: {
 },
 list: {
   flex: 1,
-  padding: 16,
+  padding: 8,
   backgroundColor: "#fff",
 },
 customMarker: {
@@ -311,7 +253,7 @@ selectedMarkerImage: {
 block: {
   flexDirection: "row",
   alignItems: "center",
-  marginBottom: 16,
+  marginBottom: 8,
   padding: 12,
   borderRadius: 8,
   backgroundColor: "#f4f4f4",
