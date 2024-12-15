@@ -20,14 +20,14 @@ const VolunteerScreen: React.FC = () => {
   const seniorId = orderData?.senior_id;
   const { data: userData, isLoading: isUserLoading } = useQuery({
     queryKey: ['user', seniorId],
-    queryFn: async () => await get_user(seniorId),
+    queryFn: async () => await get_user(seniorId as number),
     enabled: !!seniorId,
   });
 
   const mutation = useMutation({
     mutationFn: async () => await update_order(parseInt(id), { status: 'accepted' }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['order', parseInt(id)]);
+      queryClient.invalidateQueries({ queryKey: ['order', parseInt(id)] });
     },
   });
 
@@ -84,7 +84,7 @@ const VolunteerScreen: React.FC = () => {
         </View>
         <View style={styles.section}>
           <Text style={styles.label}>Kiedy:</Text>
-          <Text style={styles.value}>{format(parseISO(orderData?.valid_since ?? ""), "Pp")}</Text>
+          <Text style={styles.value}>Kiedy: {orderData?.valid_since && format(parseISO(orderData.valid_since), "Pp")}</Text>
         </View>
         <View style={styles.section}>
           {parseDescription()}
@@ -106,6 +106,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+    textAlign: 'center',
+    marginTop: 20,
   },
   section: {
     marginBottom: 20,

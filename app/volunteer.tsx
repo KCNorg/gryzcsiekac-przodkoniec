@@ -64,8 +64,8 @@ export default function VolunteerView() {
       const region = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
       };
       setLocation(region);
       setInitialRegion(region); // Store initial region
@@ -171,7 +171,6 @@ export default function VolunteerView() {
             .filter(
               (data) =>
                 !(
-                  data.elder_id === selectedPerson?.elder_id &&
                   data.id !== selectedPerson?.id
                 )
             )
@@ -235,7 +234,7 @@ export default function VolunteerView() {
                     Prośba: {name} {icon}
                   </Text>
                   <Text style={styles.textSmall}>
-                    Kiedy: {format(parseISO(data.valid_since ?? ""), "Pp")}
+                    Kiedy: {data.valid_since && format(parseISO(data.valid_since) , "Pp")}
                   </Text>
                 </View>
                 {selectedPerson?.id === data.id && (
