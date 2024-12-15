@@ -18,6 +18,7 @@ import { Order } from "@/types/order";
 import { format, parseISO } from "date-fns";
 import { CATEGORY_MAP } from "@/constants/Categories";
 import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 type OrderWithLocation = Order & {
   latitude: number;
@@ -230,11 +231,14 @@ export default function VolunteerView() {
                   </Text>
                 </View>
                 {selectedPerson?.id === data.id && (
-                  // <TouchableOpacity style={styles.confirmButton}>
-                  //   <Text style={styles.confirmButtonText}>Zatwierdź</Text>
-                  // </TouchableOpacity>
-                  <Link href={`/groceries/list/${order.id}`} asChild>
-                    <Button title="Zobacz listę zakupów →" />
+                  <Link href={`/groceries`} asChild>
+                    <TouchableOpacity>
+                      <Ionicons
+                        name="eye-outline"
+                        size={32}
+                        color={"#0080ff"}
+                      />
+                    </TouchableOpacity>
                   </Link>
                 )}
               </TouchableOpacity>
@@ -265,10 +269,6 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: "#007BFF",
     borderRadius: 4,
-  },
-  confirmButtonText: {
-    color: "#fff",
-    fontSize: 14,
   },
   markerImage: {
     width: 40,
