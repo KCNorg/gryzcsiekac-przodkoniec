@@ -1,9 +1,10 @@
 import { Order } from "@/types/order";
 import { API_URL } from "@/constants/Api";
-import { apiCall } from "./utils";
+import { apiCall, objectToQueryParams } from "./utils";
 
-export const get_orders = async () => {
-  const orders: Order[] = await apiCall(`${API_URL}/orders`);
+export const get_orders = async (params: Object = {}) => {
+  const paramsString = objectToQueryParams(params);
+  const orders: Order[] = await apiCall(`${API_URL}/orders?${paramsString}`);
   return orders;
 };
 

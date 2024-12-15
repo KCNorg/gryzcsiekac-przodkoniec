@@ -1,15 +1,16 @@
 import { API_URL } from '@/constants/Api';
-import { apiCall } from './utils';
+import { apiCall, objectToQueryParams } from "@/services/utils";
+
+export const get_users = async (params: Object = {}) => {
+  const paramsString = objectToQueryParams(params);
+  const users: User[] = await apiCall(`${API_URL}/users?${paramsString}`);
+  return users;
+}
 
 export const get_user = async (id: number) => {
   const response = await fetch(`${API_URL}/users/${id}`);
   const user: User = await response.json();
   return user;
-}
-
-export const get_users = async () => {
-  const users: User[] = await apiCall(`${API_URL}/users?limit=1000`);
-  return users;
 }
 
 export const create_user = async (user: User) => {
