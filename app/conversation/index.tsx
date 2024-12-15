@@ -6,6 +6,7 @@ import { StyleSheet,
   View,
   Text,
   ImageSourcePropType, SafeAreaView } from "react-native";
+import { router } from "expo-router";
 
   export default function Conversation() {
   return (
@@ -21,7 +22,7 @@ import { StyleSheet,
       <OrderCategoryView
         category="conversation"
         categoryIcon={require("../../assets/images/talk.png")}
-        onCreate={() => {}}
+        onCreate={() => router.replace("/conversation/create")}
       />
     </SafeAreaView>
   );
